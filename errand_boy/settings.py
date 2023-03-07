@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = (os.getenv("DEBUG") == 'true')
 
 ALLOWED_HOSTS = [
-    'http://localhost:8000',
+    'localhost:8000',
     os.getenv("HOST_URL")
 ]
 
