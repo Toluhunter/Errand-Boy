@@ -13,7 +13,7 @@ RUN apt-get install -y --fix-missing \
     build-essential \
     cmake \
     # gfortran \
-    # git \
+    git \
     # wget \
     # curl \
     # graphicsmagick \
@@ -38,11 +38,11 @@ COPY ./requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# RUN cd / && \
-#     mkdir -p dlib && \
-#     git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
-#     cd  dlib/ && \
-#     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
+RUN cd / && \
+    mkdir -p dlib && \
+    git clone -b 'v19.9' --single-branch https://github.com/davisking/dlib.git dlib/ && \
+    cd  dlib/ && \
+    python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 RUN pip install face-recognition
 
