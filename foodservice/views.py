@@ -7,20 +7,22 @@ from rest_framework.permissions import IsAuthenticated
 
 from .serializers import FoodServiceSerializer
 from .permissions import Isowner
-from account.permissions import IsFoodSevice
+from account.permissions import IsFoodService, HasNotRegisteredFoodSevice
 from .models import FoodService
+
 
 class CreateFoodServiceVIew(generics.CreateAPIView):
 
     serializer_class = FoodServiceSerializer
     parser_classes = [MultiPartParser]
-    permission_classes = [IsAuthenticated, IsFoodSevice]
+    permission_classes = [IsAuthenticated, HasNotRegisteredFoodSevice]
+
 
 class RetrieveFoodServiceView(generics.RetrieveAPIView):
 
     serializer_class = FoodServiceSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def get_object(self):
         id = self.kwargs["id"]
         obj = get_object_or_404(FoodService, id=id)
@@ -29,10 +31,11 @@ class RetrieveFoodServiceView(generics.RetrieveAPIView):
 
         return obj
 
+
 class ManageFoodServiceView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = FoodServiceSerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice, Isowner]
+    permission_classes = [IsAuthenticated, IsFoodService, Isowner]
     parser_classes = [MultiPartParser]
 
     def get_object(self):

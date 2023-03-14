@@ -5,14 +5,14 @@ from rest_framework.parsers import MultiPartParser
 
 from .serializers import ProductSerializer, CategortySerializer
 from .permissions import IsProductOwner, IsCategoryOwner
-from account.permissions import IsFoodSevice
+from account.permissions import IsFoodService
 from .models import Product, Category
 
 
 class CreateProductView(generics.CreateAPIView):
 
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice]
+    permission_classes = [IsAuthenticated, IsFoodService]
     parser_classes = [MultiPartParser]
 
 
@@ -39,7 +39,7 @@ class RetrieveProductView(generics.RetrieveAPIView):
 class ManageProductView(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
 
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsFoodService, IsProductOwner]
 
     def get_object(self):
         id = self.kwargs["id"]
@@ -61,7 +61,7 @@ class ManageProductView(generics.GenericAPIView, mixins.UpdateModelMixin, mixins
 class FetchFoodServiceProductView(generics.ListAPIView):
 
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice]
+    permission_classes = [IsAuthenticated, IsFoodService]
 
     def get_queryset(self):
         filter = self.request.GET.get("filter", None)
@@ -75,7 +75,7 @@ class FetchFoodServiceProductView(generics.ListAPIView):
 
 class AddCategoryView(generics.ListCreateAPIView):
     serializer_class = CategortySerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice]
+    permission_classes = [IsAuthenticated, IsFoodService]
 
     def get_queryset(self):
         return Category.objects.filter(foodservice=self.request.user.foodservice)
@@ -90,7 +90,7 @@ class ListCategoryView(generics.ListAPIView):
 class DeleteCategoryView(generics.DestroyAPIView):
 
     serializer_class = CategortySerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice, IsCategoryOwner]
+    permission_classes = [IsAuthenticated, IsFoodService, IsCategoryOwner]
 
     def get_object(self):
         id = self.kwargs["id"]
@@ -105,7 +105,7 @@ class DeleteCategoryView(generics.DestroyAPIView):
 class DeleteProductView(generics.DestroyAPIView):
 
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsFoodSevice, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsFoodService, IsProductOwner]
 
     def get_object(self):
         id = self.kwargs["id"]
