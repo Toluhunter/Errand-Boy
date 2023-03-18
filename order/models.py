@@ -1,4 +1,4 @@
-import uuid
+from uuid import uuid4
 from random import randint
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -9,15 +9,21 @@ User = get_user_model()
 
 
 def get_order_number():
+    '''
+    Generate a random 4-digit order number
+    '''
     return randint(1111, 9999)
 
 
 def estimate_delivery_cost():
-    return 5 * randint(1, 4)
+    '''
+    Generate Random delivery cost between 500 - 2000
+    '''
+    return 500 * randint(1, 4)
 
 
 class Item(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = models.UUIDField(primary_key=True, default=uuid4, blank=False)
     amount = models.PositiveSmallIntegerField(null=False, blank=False)
     product = models.ForeignKey(
         to=Product, on_delete=models.CASCADE, null=False, blank=False, related_name="order_item")
@@ -33,7 +39,7 @@ class Order(models.Model):
     ]
     owner = models.ForeignKey(
         to=User, on_delete=models.CASCADE, null=False, blank=False)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    id = models.UUIDField(primary_key=True, default=uuid4)
     number = models.IntegerField(
         default=get_order_number, unique=True, blank=False, null=False)
     address = models.TextField(null=False, blank=False)

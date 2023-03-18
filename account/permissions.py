@@ -2,10 +2,16 @@ from rest_framework.permissions import BasePermission
 
 
 class IsFoodService(BasePermission):
+    '''
+    Allow Access only to users registered as food service with a registered food service
+    '''
 
     def has_permission(self, request, view):
         if request.user.role == request.user.FOODPROVIDER:
             try:
+                '''
+                Checks if user has a registered food service
+                '''
                 request.user.foodservice
             except:
                 return False
@@ -15,6 +21,9 @@ class IsFoodService(BasePermission):
 
 
 class IsCourier(BasePermission):
+    '''
+    Allow Access only to users registered as a courier
+    '''
 
     def has_permission(self, request, view):
 
@@ -30,7 +39,7 @@ class IsUser(BasePermission):
 
 class HasNotRegisteredFoodSevice(BasePermission):
     '''
-    Permission To check For Food Service Account that has no registered food service
+    Allow access only to food service accounts that has no registered food service
     '''
 
     def has_permission(self, request, view):

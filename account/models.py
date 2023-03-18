@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
 
         other_fields.setdefault("is_active", True)
 
-        return self.create_user(email=email, password=password, )
+        return self.create_user(email=email, password=password, **other_fields)
 
 
 class Account(AbstractBaseUser, PermissionsMixin):
@@ -76,17 +76,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
-    def generate_id(self):
-        id = uuid4()
-
-        while (Account.objects.filter(id=id).exists()):
-            id = uuid4()
-
-        return id
-
     def save(self, *args, **kwargs):
-        if not self.id:
-            self.id = self.generate_id()
 
+        # Performing full clean before saving
         self.full_clean()
         return super().save(*args, **kwargs)

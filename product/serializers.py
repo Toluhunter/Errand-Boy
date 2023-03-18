@@ -3,6 +3,9 @@ from .models import Product, Category
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    '''
+    Serializer to handle all CRUD operations for a product
+    '''
 
     product_id = serializers.CharField(read_only=True)
     category = serializers.PrimaryKeyRelatedField(
@@ -16,6 +19,7 @@ class ProductSerializer(serializers.ModelSerializer):
         category = attrs["category"]
         request = self.context["request"]
 
+        # only allow creation with category if owned by the food service
         if category.foodservice != request.user.foodservice:
             raise serializers.ValidationError(
                 "Invalid Category For Foodservice")
@@ -35,6 +39,7 @@ class ProductSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
 
         if "name" in validated_data:
+            # if product name is changed set set new user friendly product id
             instance.product_id = instance.set_product_id()
 
         instance.save()
@@ -43,6 +48,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CategortySerializer(serializers.ModelSerializer):
+    '''
+    Serializer to handle all CRUD operations for a Category
+    '''
 
     id = serializers.UUIDField(read_only=True)
 

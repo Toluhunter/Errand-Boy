@@ -12,6 +12,9 @@ from .models import FoodService
 
 
 class CreateFoodServiceVIew(generics.CreateAPIView):
+    '''
+    Class View to allow only users registered as food service to create a food service
+    '''
 
     serializer_class = FoodServiceSerializer
     parser_classes = [MultiPartParser]
@@ -19,6 +22,9 @@ class CreateFoodServiceVIew(generics.CreateAPIView):
 
 
 class RetrieveFoodServiceView(generics.RetrieveAPIView):
+    '''
+    Class View to allow any authenticated user view details of the food service
+    '''
 
     serializer_class = FoodServiceSerializer
     permission_classes = [IsAuthenticated]
@@ -33,6 +39,9 @@ class RetrieveFoodServiceView(generics.RetrieveAPIView):
 
 
 class ManageFoodServiceView(generics.RetrieveUpdateDestroyAPIView):
+    '''
+    Class view to allow only owner of the food service to perform all CRUD operations on it
+    '''
 
     serializer_class = FoodServiceSerializer
     permission_classes = [IsAuthenticated, IsFoodService, Isowner]

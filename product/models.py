@@ -36,6 +36,9 @@ class Product(models.Model):
         unique_together = ("name", "foodservice")
 
     def set_product_id(self):
+        '''
+        Generate user friendly id for product with use of title and product's id
+        '''
         name = self.name.lower().replace(" ", "-")
         return f'{name}-{self.id}'
 

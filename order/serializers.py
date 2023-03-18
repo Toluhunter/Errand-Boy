@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Order
+from .models import Order, Item
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -9,3 +9,12 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         exclude = ['owner']
+
+    def create(self, validated_data):
+        '''
+        Creation of items and order instance
+        '''
+        ...
+
+    def update(self, instance, validated_data):
+        ...
