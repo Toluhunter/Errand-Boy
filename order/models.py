@@ -23,14 +23,6 @@ def estimate_delivery_cost():
     return 500 * randint(1, 4)
 
 
-class Item(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid4, blank=False)
-    amount = models.PositiveSmallIntegerField(null=False, blank=False)
-    product = models.ForeignKey(
-        to=Product, on_delete=models.CASCADE, null=False, blank=False, related_name="order_item")
-    total_price = models.FloatField(null=False, blank=False) # Read only field
-
-
 class Order(models.Model):
 
     statuses = [
@@ -53,6 +45,14 @@ class Order(models.Model):
     total_price = models.PositiveBigIntegerField(null=False, blank=False)
     delivery_cost = models.IntegerField(
         null=False, blank=False, default=estimate_delivery_cost)
-    items = models.ForeignKey(
-        to=Item, related_name="order", on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now)
+
+
+class Item(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, blank=False)
+    amount = models.PositiveSmallIntegerField(null=False, blank=False)
+    product = models.OneToOneField(
+        to=Product, on_delete=models.CASCADE, null=False, blank=False, related_name="order_item")
+    total_price = models.FloatField(null=False, blank=False)  # Read only field
+    order = models.ForeignKey(
+        to=Order, related_name="order", on_delete=models.CASCADE)
