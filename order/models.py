@@ -2,6 +2,7 @@ from uuid import uuid4
 from random import randint
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from product.models import Product
 
@@ -27,7 +28,7 @@ class Item(models.Model):
     amount = models.PositiveSmallIntegerField(null=False, blank=False)
     product = models.ForeignKey(
         to=Product, on_delete=models.CASCADE, null=False, blank=False, related_name="order_item")
-    total_price = models.FloatField(null=False, blank=False)
+    total_price = models.FloatField(null=False, blank=False) # Read only field
 
 
 class Order(models.Model):
@@ -54,3 +55,4 @@ class Order(models.Model):
         null=False, blank=False, default=estimate_delivery_cost)
     items = models.ForeignKey(
         to=Item, related_name="order", on_delete=models.CASCADE)
+    date_created = models.DateTimeField(default=timezone.now)
