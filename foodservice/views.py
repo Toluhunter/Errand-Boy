@@ -21,6 +21,12 @@ class CreateFoodServiceVIew(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, HasNotRegisteredFoodSevice]
 
 
+class ListFoodServiceView(generics.ListAPIView):
+    serializer_class = FoodServiceSerializer
+    queryset = FoodService.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
 class RetrieveFoodServiceView(generics.RetrieveAPIView):
     '''
     Class View to allow any authenticated user view details of the food service
@@ -48,9 +54,8 @@ class ManageFoodServiceView(generics.RetrieveUpdateDestroyAPIView):
     parser_classes = [MultiPartParser]
 
     def get_object(self):
-        id = self.kwargs["id"]
-        obj = get_object_or_404(FoodService, id=id)
 
+        obj = self.request.user.foodservice
         self.check_object_permissions(request=self.request, obj=obj)
 
         return obj
