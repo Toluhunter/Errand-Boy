@@ -3,7 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("category/all/", views.ListCategoryView.as_view(), name="categories"),
+    path("category/<uuid:id>/", views.ListCategoryView.as_view(), name="categories"),
     path("add-category/", views.AddCategoryView.as_view(), name="add-category"),
     path("all/", views.ListProductView.as_view(), name="products"),
     path("manage-product/<str:id>/",

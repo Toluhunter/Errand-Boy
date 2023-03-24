@@ -119,7 +119,17 @@ class ListCategoryView(generics.ListAPIView):
     '''
     serializer_class = CategortySerializer
     permission_classes = [IsAuthenticated]
-    queryset = Category.objects.all()
+
+    def get_object(self):
+        id = self.kwargs["id"]
+        obj = get_object_or_404(Category, id=id)
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def get_queryset(self):
+
+        foodservice = self.get_object()
+        return Category.objects.filter(foodservice=foodservice)
 
 
 class DeleteCategoryView(generics.DestroyAPIView):
