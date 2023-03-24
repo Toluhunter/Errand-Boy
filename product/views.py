@@ -7,7 +7,7 @@ from rest_framework.parsers import MultiPartParser
 from .serializers import ProductSerializer, CategortySerializer
 from .permissions import IsProductOwner, IsCategoryOwner
 from account.permissions import IsFoodService
-from .models import Product, Category
+from .models import Product, Category, FoodService
 
 
 class CreateProductView(generics.CreateAPIView):
@@ -122,7 +122,7 @@ class ListCategoryView(generics.ListAPIView):
 
     def get_object(self):
         id = self.kwargs["id"]
-        obj = get_object_or_404(Category, id=id)
+        obj = get_object_or_404(FoodService, id=id)
         self.check_object_permissions(self.request, obj)
         return obj
 
