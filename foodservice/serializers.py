@@ -10,9 +10,10 @@ class FoodServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodService
         exclude = ["user"]
+        read_only_fields = ["id"]
 
-    def __init__(self, instance=None, **kwargs):
-        super().__init__(instance, **kwargs)
-
-        # Sets id field to read only
-        self.fields["id"].read_only = True
+    def create(self, validated_data):
+        return FoodService.objects.create(
+            user=self.context["request"].user,
+            **validated_data
+        )
