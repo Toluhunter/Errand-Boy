@@ -15,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        read_only_fields = ["id", "foodservice"]
+        exclude = ["id"]
 
     def validate(self, attrs):
         category = attrs["category"]

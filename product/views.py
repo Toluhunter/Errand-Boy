@@ -65,25 +65,6 @@ class ManageProductView(generics.GenericAPIView, mixins.UpdateModelMixin, mixins
         return self.destroy(request, **kwargs)
 
 
-class DeleteProductView(generics.DestroyAPIView):
-
-    '''
-    Class view for the deletion of product view by product owner
-    '''
-
-    serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated, IsFoodService, IsProductOwner]
-
-    def get_object(self):
-        id = self.kwargs["id"]
-
-        obj = get_object_or_404(Product, post_id=id)
-
-        self.check_object_permissions(self.request, obj=obj)
-
-        return obj
-
-
 class FetchFoodServiceProductView(generics.ListAPIView):
     '''
     Fetch all products added by the authenticated foodservice 
