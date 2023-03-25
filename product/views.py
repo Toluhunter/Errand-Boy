@@ -50,11 +50,12 @@ class ManageProductView(generics.GenericAPIView, mixins.UpdateModelMixin, mixins
     Class view to handle updating and deleting of product details, by product owner
     '''
     serializer_class = ProductSerializer
+    parser_classes = [MultiPartParser]
     permission_classes = [IsAuthenticated, IsFoodService, IsProductOwner]
 
     def get_object(self):
         id = self.kwargs["id"]
-        obj = get_object_or_404(Product, post_id=id)
+        obj = get_object_or_404(Product, product_id=id)
         self.check_object_permissions(self.request, obj=obj)
         return obj
 

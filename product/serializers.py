@@ -4,6 +4,35 @@ from foodservice.serializers import FoodServiceSerializer
 from .models import Product, Category
 
 
+class CategortySerializer(serializers.ModelSerializer):
+    '''
+    Serializer to handle all CRUD operations for a Category
+    '''
+
+    id = serializers.UUIDField(read_only=True)
+
+    class Meta:
+        model = Category
+        exclude = ["foodservice"]
+
+    def validate(self, attrs):
+        foodservice = self.context["request"].user.foodservice
+        try:
+            Category.objects.get(name=attrs["name"], foodservice=foodservice)
+            raise serializers.ValidationError("Already Exisiting Category")
+        except:
+            pass
+        return attrs
+
+    def create(self, validated_data):
+
+        request = self.context["request"]
+        foodservice = request.user.foodservice
+
+        return self.Meta.model.objects.create(
+            **validated_data, foodservice=foodservice)
+
+
 class ProductSerializer(serializers.ModelSerializer):
     '''
     Serializer to handle all CRUD operations for a product
@@ -16,6 +45,11 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         exclude = ["id"]
+
+    def __init__(self, instance=None, **kwargs):
+        super().__init__(instance, **kwargs)
+        if self.instance and "data" not in kwargs:
+            self.fields["category"] = CategortySerializer(read_only=True)
 
     def validate(self, attrs):
         category = attrs["category"]
@@ -54,32 +88,3 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-
-class CategortySerializer(serializers.ModelSerializer):
-    '''
-    Serializer to handle all CRUD operations for a Category
-    '''
-
-    id = serializers.UUIDField(read_only=True)
-
-    class Meta:
-        model = Category
-        exclude = ["foodservice"]
-
-    def validate(self, attrs):
-        foodservice = self.context["request"].user.foodservice
-        try:
-            Category.objects.get(name=attrs["name"], foodservice=foodservice)
-            raise serializers.ValidationError("Already Exisiting Category")
-        except:
-            pass
-        return attrs
-
-    def create(self, validated_data):
-
-        request = self.context["request"]
-        foodservice = request.user.foodservice
-
-        return self.Meta.model.objects.create(
-            **validated_data, foodservice=foodservice)
