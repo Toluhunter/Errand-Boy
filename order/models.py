@@ -40,7 +40,8 @@ class Order(models.Model):
         max_length=7,
         choices=statuses,
         null=False,
-        blank=False
+        blank=False,
+        default="pending"
     )
     total_price = models.PositiveBigIntegerField(null=False, blank=False)
     delivery_cost = models.IntegerField(

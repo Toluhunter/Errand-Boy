@@ -4,7 +4,7 @@ from product.serializers import ProductSerializer
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer()
+    product = ProductSerializer(required=True)
 
     class Meta:
         model = Item
@@ -12,11 +12,15 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(many=True)
+    items = ItemSerializer(many=True, required=True)
 
     class Meta:
         model = Order
         fields = ["address", "instruction"]
+
+    def validate(self, attrs):
+
+        return attrs
 
     def create(self, validated_data):
         '''
@@ -25,7 +29,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         owner = self.context["request"].user
         validated_data["owner"] = owner
 
-        items_data = validated_data.pop("items") # Removing products
+        items_data = validated_data.pop("items")  # Removing products
         total_price = 0
 
         for item in items_data:
@@ -39,7 +43,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         for item in items_data:
             total_price = item.amount * item.product.price
             Item.objects.create(order=order, product=item.product,
-                                total_price=total_price, **item)
+                                total_price=total_price, amount=item["amount"])
 
         return order
 
