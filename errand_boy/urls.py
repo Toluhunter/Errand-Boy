@@ -9,5 +9,8 @@ urlpatterns = [
     path("token/refresh/", RefreshAccessTokenView.as_view()),
     path("foodservice/", include("foodservice.urls")),
     path("product/", include("product.urls")),
+<<<<<<< HEAD
     path("order/", include("order.urls")),
+=======
+>>>>>>> 77fd31e (Fixed foodservice creation)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
