@@ -10,12 +10,15 @@ class Category(models.Model):
 
     id = models.UUIDField(default=uuid4, primary_key=True)
     name = models.CharField(max_length=60, null=False,
-                            blank=False, unique=True)
+                            blank=False)
     foodservice = models.ForeignKey(
         to=FoodService, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.foodservice} {self.name}"
+
+    class Meta:
+        unique_together = ("name", "foodservice")
 
 
 def set_id():

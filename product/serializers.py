@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from foodservice.serializers import FoodServiceSerializer
 from .models import Product, Category
 
 
@@ -6,14 +8,14 @@ class ProductSerializer(serializers.ModelSerializer):
     '''
     Serializer to handle all CRUD operations for a product
     '''
-
+    foodservice = FoodServiceSerializer(read_only=True)
     product_id = serializers.CharField(read_only=True)
     category = serializers.PrimaryKeyRelatedField(
         required=True, queryset=Category.objects.all())
 
     class Meta:
         model = Product
-        exclude = ["id", "foodservice"]
+        read_only_fields = ["id", "foodservice"]
 
     def validate(self, attrs):
         category = attrs["category"]
@@ -23,6 +25,13 @@ class ProductSerializer(serializers.ModelSerializer):
         if category.foodservice != request.user.foodservice:
             raise serializers.ValidationError(
                 "Invalid Category For Foodservice")
+
+        try:
+            Product.objects.get(
+                name=attrs["name"], foodservice=request.user.foodservice)
+            raise serializers.ValidationError("Already Exisiting Product")
+        except:
+            pass
 
         return attrs
 
@@ -57,6 +66,15 @@ class CategortySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         exclude = ["foodservice"]
+
+    def validate(self, attrs):
+        foodservice = self.context["request"].user.foodservice
+        try:
+            Category.objects.get(name=attrs["name"], foodservice=foodservice)
+            raise serializers.ValidationError("Already Exisiting Category")
+        except:
+            pass
+        return attrs
 
     def create(self, validated_data):
 
