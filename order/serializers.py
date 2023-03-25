@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from .models import Order, Item
-from product.serializers import ProductSerializer
+from product.serializers import ProductIDSerializer
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(required=True)
+    product = ProductIDSerializer(required=True)
 
     class Meta:
         model = Item
@@ -19,7 +19,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = ["address", "instruction"]
 
     def validate(self, attrs):
-
+        
         return attrs
 
     def create(self, validated_data):

@@ -88,3 +88,21 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class ProductIDSerializer(serializers.Serializer):
+    """Serializer for orders, allowing for linking with product ID"""
+    id = serializers.IntegerField(required=True)
+
+    def validate(self, attrs):
+        try:
+            product = Product.objects.get(id=attrs["id"])
+        except Product.DoesNotExist:
+            raise serializers.ValidationError(
+                {"error": f"Product with id={attrs['id']} does not exist"})
+
+        attrs[product] = product
+        return attrs
+
+    def save(self):
+        return self.validated_data["product"]

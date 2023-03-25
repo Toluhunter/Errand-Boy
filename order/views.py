@@ -1,5 +1,4 @@
 from .serializers import OrderSerializer
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from account.permissions import IsUser
 from rest_framework.generics import GenericAPIView
@@ -10,6 +9,7 @@ class CreateOrderView(GenericAPIView):
     Creation of order by an authenticated user with ROLE=User.
     """
     permission_classes = [IsAuthenticated, IsUser]
+    serializer_class = OrderSerializer
 
 
 class ListOrderView(GenericAPIView):
