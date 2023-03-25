@@ -10,7 +10,13 @@ urlpatterns = [
     path("foodservice/", include("foodservice.urls")),
     path("product/", include("product.urls")),
 <<<<<<< HEAD
+<<<<<<< HEAD
     path("order/", include("order.urls")),
 =======
 >>>>>>> 77fd31e (Fixed foodservice creation)
+=======
+=======
+    path("order/", include("order.urls")),
+>>>>>>> 8dc5619 (Added order app url)
+>>>>>>> 2ff32cb (Added order urls)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
