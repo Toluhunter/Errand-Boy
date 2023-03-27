@@ -1,26 +1,40 @@
-from .serializers import OrderSerializer
+from .serializers import (
+    CreateOrderSerializer,
+    ListOrderSerializer,
+    DetailOrderSerializer
+)
 from rest_framework.permissions import IsAuthenticated
 from account.permissions import IsUser
-from rest_framework.generics import GenericAPIView
+from .permissions import IsOwner, IsOrderOwner
+from rest_framework.generics import (
+    CreateAPIView,
+    ListAPIView,
+    RetrieveAPIView
+)
+from .models import Order
 
 
-class CreateOrderView(GenericAPIView):
+class CreateOrderView(CreateAPIView):
     """
     Creation of order by an authenticated user with ROLE=User.
     """
     permission_classes = [IsAuthenticated, IsUser]
-    serializer_class = OrderSerializer
+    serializer_class = CreateOrderSerializer
 
 
-class ListOrderView(GenericAPIView):
+class ListOrderView(ListAPIView):
     """
-    Retrieval of **all** orders page by an authenticated user with ROLE=User.
+    Retrieval of **all** orders owned by an authenticated user with ROLE=User.
     """
-    permission_classes = [IsAuthenticated, IsUser]
+    permission_classes = [IsAuthenticated, IsUser, IsOwner]
+    serializer_class = ListOrderSerializer
+    queryset = Order.objects.all()
 
 
-class OrderDetailView(GenericAPIView):
+class OrderDetailView(RetrieveAPIView):
     """
     Retrieval of a **single** order by an authenticated user with ROLE=User.
     """
-    permission_classes = [IsAuthenticated, IsUser]
+    permission_classes = [IsAuthenticated, IsUser, IsOrderOwner]
+    serializer_class = DetailOrderSerializer
+    queryset = Order.objects.all()
