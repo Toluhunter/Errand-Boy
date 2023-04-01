@@ -33,7 +33,7 @@ class ListOrderView(ListAPIView):
 
 class OrderDetailView(RetrieveAPIView):
     """
-    Retrieval of a **single** order by an authenticated user with ROLE=User.
+    Retrieval of a **single** order owned by an authenticated user with ROLE=User.
     """
     permission_classes = [IsAuthenticated, IsUser, IsOrderOwner]
     serializer_class = DetailOrderSerializer
