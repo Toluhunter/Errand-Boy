@@ -1,6 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenViewBase
 from . import serializers
@@ -74,3 +75,17 @@ class RefreshAccessTokenView(TokenViewBase):
     '''
 
     serializer_class = serializers.RefreshAccessSerializer
+
+
+class HasRegisteredFaceView(APIView):
+    '''
+    Endpoint to Return True or False if Face Has been registered
+    '''
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.face:
+            return Response({'face': False}, status=status.HTTP_200_OK)
+
+        return Response({'face': True}, status=status.HTTP_200_OK)
