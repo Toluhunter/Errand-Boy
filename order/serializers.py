@@ -4,15 +4,16 @@ from product.serializers import ProductIDSerializer, ProductSerializer
 
 
 class ItemSerializer(serializers.ModelSerializer):
-    """Serializer to return product queryset"""
+    """Serializer that represents Item"""
     product = ProductIDSerializer(required=True)
 
     class Meta:
         model = Item
         fields = ["amount", "product"]
 
+
 class ItemDetailSerializer(serializers.ModelSerializer):
-    """Serializer to fetch all product details"""
+    """Serializer to fetch all Items in an order"""
     product = ProductSerializer(required=True)
 
     class Meta:
@@ -21,6 +22,7 @@ class ItemDetailSerializer(serializers.ModelSerializer):
 
 
 class CreateOrderSerializer(serializers.ModelSerializer):
+    """Creation of order serializer"""
     items = ItemSerializer(many=True, required=True)
 
     class Meta:
@@ -28,6 +30,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         fields = ["items", "address", "instruction"]
 
     def validate(self, attrs):
+        """
+        Ensures that:
+        1. An order contains an item.
+        2. No repeating item is in contained in an order.
+        """
         items = attrs["items"]
 
         if not items:
@@ -55,9 +62,9 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop("items")  # Removing products
         total_price = 0
 
+        # Calculate item total price
         for item in items_data:
             product = item["product"]["product"]
-            # Calculate item total price
             total_price += (item["amount"] * product.price)
 
         validated_data["total_price"] = total_price
@@ -74,6 +81,7 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
 
 class ListOrderSerializer(serializers.ModelSerializer):
+    """List all order serializer"""
     items = ItemSerializer(many=True)
 
     class Meta:
