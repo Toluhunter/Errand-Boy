@@ -1,6 +1,5 @@
 from .serializers import (
     CreateOrderSerializer,
-    ListOrderSerializer,
     DetailOrderSerializer
 )
 from rest_framework.permissions import IsAuthenticated
@@ -27,7 +26,7 @@ class ListOrderView(ListAPIView):
     Retrieval of **all** orders owned by an authenticated user with ROLE=User.
     """
     permission_classes = [IsAuthenticated, IsUser, IsOwner]
-    serializer_class = ListOrderSerializer
+    serializer_class = DetailOrderSerializer
     queryset = Order.objects.all()
 
 
