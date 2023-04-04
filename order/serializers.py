@@ -80,17 +80,8 @@ class CreateOrderSerializer(serializers.ModelSerializer):
         return order
 
 
-class ListOrderSerializer(serializers.ModelSerializer):
-    """List all order serializer"""
-    items = ItemSerializer(many=True)
-
-    class Meta:
-        model = Order
-        exclude = ["date_created", "owner"]
-
-
 class DetailOrderSerializer(serializers.ModelSerializer):
-    """Serializer for detail view"""
+    """Get all order details serializer"""
     items = ItemDetailSerializer(many=True)
 
     class Meta:
