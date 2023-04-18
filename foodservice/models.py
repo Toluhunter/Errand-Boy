@@ -4,6 +4,9 @@ from uuid import uuid4
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
+from django.utils import timezone
+from order.models import Order
+from product.models import Product
 
 User = get_user_model()
 
@@ -29,3 +32,22 @@ class FoodService(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class RestaurantOrder(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4, blank=False)
+    order = models.ForeignKey(
+        to=Order, related_name="items", on_delete=models.CASCADE)
+    order_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self) -> str:
+        return f"(Order ID: {self.order.id})"
+
+
+class RestaurantOrderItems(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+    quantity = models.PositiveSmallIntegerField(null=False, blank=False)
+    restaurant_order = models.ManyToManyField(
+        RestaurantOrder, related_name="items")
+    product = models.ForeignKey(
+        to=Product, on_delete=models.CASCADE, null=False, blank=False, related_name="restaurant_order_item")

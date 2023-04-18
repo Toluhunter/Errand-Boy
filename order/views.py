@@ -25,9 +25,11 @@ class ListOrderView(ListAPIView):
     """
     Retrieval of **all** orders owned by an authenticated user with ROLE=User.
     """
-    permission_classes = [IsAuthenticated, IsUser, IsOwner]
+    permission_classes = [IsAuthenticated, IsUser, IsOrderOwner]
     serializer_class = DetailOrderSerializer
-    queryset = Order.objects.all()
+
+    def get_queryset(self):
+        return Order.objects.filter(owner=self.request.user)
 
 
 class OrderDetailView(RetrieveAPIView):

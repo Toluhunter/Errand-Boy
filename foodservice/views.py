@@ -42,6 +42,8 @@ class RetrieveFoodServiceView(generics.RetrieveAPIView):
         self.check_object_permissions(request=self.request, obj=obj)
 
         return obj
+
+    
 class RetrieveMyFoodServiceView(generics.RetrieveAPIView):
     '''
     Class View to allow any authenticated user view details of the food service

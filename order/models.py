@@ -27,6 +27,7 @@ class Order(models.Model):
 
     statuses = [
         ("pending", "Pending"),
+        ("accepted", "Accepted"), # Order accepted by courier
         ("failed", "Failed"),
         ("success", "Success")
     ]
@@ -38,7 +39,7 @@ class Order(models.Model):
     address = models.TextField(null=False, blank=False)
     instruction = models.TextField(null=False, blank=False)
     status = models.CharField(
-        max_length=7,
+        max_length=8,
         choices=statuses,
         null=False,
         blank=False,
